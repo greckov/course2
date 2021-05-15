@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  web:
+    image: ${COURSE2_IMAGE}
+    command: bash -c "
+      ./scripts/wait_for.sh db:5432 -t 60
+      && python manage.py migrate
+      && python manage.py runserver 0.0.0.0:5540"
+    ports:
+      - 5540:5540
+    volumes:
+      - ./:/course2
+    environment:
+      DATABASE_NAME: postgres
+      DATABASE_PASSWORD: postgres
+      DATABASE_HOST: db
+      DATABASE_USER: postgres
+      DATABASE_PORT: 5432
+  db:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
