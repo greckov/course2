@@ -2,4 +2,34 @@
 
 {% block title %}Головна{% endblock %}
 
-{% block content %}{% endblock %}
+{% block content %}
+  <h1 class="text-center mt-5">Список постів в блозі ({{ object_list.count }} загалом)</h1>
+
+  <table class="table mt-4">
+    <tr>
+      <th>#</th>
+      <th>Створено в</th>
+      <th>Назва</th>
+      <th>Сподобалося</th>
+      <th>Не сподобалося</th>
+      <th>Дія</th>
+    </tr>
+
+    {% for post in object_list %}
+      <tr>
+        <td>{{ post.id }}</td>
+        <td>{{ post.creat }}</td>
+        <td>{{ post.title|truncatechars:30 }}</td>
+        <td>{{ post.likes }}</td>
+        <td>{{ post.dislikes }}</td>
+        <td>
+          <a href="{% url 'blog:post_view' post.id %}" class="btn btn-primary">Перегляд</a>
+        </td>
+      </tr>
+    {% empty %}
+      <tr>
+
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

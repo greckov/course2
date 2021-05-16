@@ -8,23 +8,36 @@ class Company(models.Model):
     site = models.URLField('URL сайта', blank=True)
     email = models.EmailField('Електронна пошта')
 
+    class Meta:
+        verbose_name = 'Компанія'
+        verbose_name_plural = 'Компанії'
+
 
 class Post(models.Model):
     title = models.CharField('Назва', max_length=255, db_index=True)
     content = models.TextField('Вміст')
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, models.SET_NULL, null=True, blank=True,
                                    verbose_name='Створено користувачем')
-    likes = models.IntegerField('Лайки')
-    dislikes = models.IntegerField('Дизлайки')
+    likes = models.IntegerField('Лайки', default=0, editable=False)
+    dislikes = models.IntegerField('Дизлайки', default=0, editable=False)
     preview = models.ImageField(upload_to='post_previews')
     categories = models.ManyToManyField('blog.Category', blank=True, verbose_name='Категорії')
+    created_at = models.DateTimeField('Дата створення', auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Пост'
+        verbose_name_plural = 'Пости'
 
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='Пост')
     content = models.TextField('Зміст коментару', max_length=500)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, verbose_name='Користувач')
-    created_at = models.DateTimeField(auto_now_add=True, name='Дата створення')
+    created_at = models.DateTimeField('Дата створення', auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Коментар'
+        verbose_name_plural = 'Коменті'
 
 
 class Category(models.Model):
@@ -39,4 +52,6 @@ class Category(models.Model):
     description = models.TextField(max_length=500)
 
     class Meta:
+        verbose_name = 'Категорія'
+        verbose_name_plural = 'Категорії'
         unique_together = ('title', 'color')
