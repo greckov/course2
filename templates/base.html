@@ -10,37 +10,40 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Курсова робота</a>
+      <a class="navbar-brand" href="{% url 'blog:index' %}">Курсова робота: Інтернет блог</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Головна</a>
+            <a class="nav-link{% if view.code_name == 'index' %} active{% endif %}"
+               href="{% url 'blog:index' %}">Головна</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Категорії</a>
+            <a class="nav-link{% if view.code_name == 'category_list' %} active{% endif %}"
+               href="{% url 'blog:category_list' %}">Категорії</a>
           </li>
         </ul>
 
-
-        <form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
+        <form class="d-flex" action="{% url 'blog:index' %}">
+          <input class="form-control me-2" type="search" placeholder="Пошук посту..."
+                 aria-label="Пошук" name="q" value="{{ FILTER_QUERY }}">
+          <button class="btn btn-outline-success" type="submit">Пошук</button>
         </form>
 
         {% if user.is_authenticated %}
-          <a href="{% url 'admin:index' %}" class="btn btn-primary ms-2">Мій кабінет</a>
+          <a href="{% url 'admin:index' %}" class="btn btn-primary ms-lg-3 mt-lg-0 mt-2 d-block">Мій кабінет</a>
         {% else %}
-          <a href="#" class="btn btn-primary ms-2">Зареєструватися</a>
+          <a href="#" class="btn btn-primary ms-lg-3 mt-lg-0 mt-2 d-block">Зареєструватися</a>
         {% endif %}
       </div>
     </div>
   </nav>
 
-  <div class="container">
+  <div class="container-fluid">
     {% block content %}{% endblock %}
   </div>
   <script src="{% static 'lib/bootstrap/bootstrap.min.js' %}"></script>

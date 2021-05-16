@@ -18,7 +18,7 @@
     {% for post in object_list %}
       <tr>
         <td>{{ post.id }}</td>
-        <td>{{ post.creat }}</td>
+        <td>{{ post.created_at }}</td>
         <td>{{ post.title|truncatechars:30 }}</td>
         <td>{{ post.likes }}</td>
         <td>{{ post.dislikes }}</td>
@@ -28,7 +28,12 @@
       </tr>
     {% empty %}
       <tr>
-
+        <td>Немає інформації</td>
+        <td>Немає інформації</td>
+        <td>Немає інформації</td>
+        <td>Немає інформації</td>
+        <td>Немає інформації</td>
+        <td>Немає інформації</td>
       </tr>
     {% endfor %}
   </table>

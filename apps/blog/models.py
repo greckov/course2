@@ -4,9 +4,12 @@ from django.db import models
 
 class Company(models.Model):
     name = models.CharField('Назва', max_length=100, primary_key=True)
-    description = models.TextField(blank=True, max_length=2500)
+    description = models.TextField('Опис', blank=True, max_length=2500)
     site = models.URLField('URL сайта', blank=True)
     email = models.EmailField('Електронна пошта')
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name = 'Компанія'
@@ -24,6 +27,9 @@ class Post(models.Model):
     categories = models.ManyToManyField('blog.Category', blank=True, verbose_name='Категорії')
     created_at = models.DateTimeField('Дата створення', auto_now_add=True)
 
+    def __str__(self) -> str:
+        return self.title
+
     class Meta:
         verbose_name = 'Пост'
         verbose_name_plural = 'Пости'
@@ -34,6 +40,9 @@ class Comment(models.Model):
     content = models.TextField('Зміст коментару', max_length=500)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, verbose_name='Користувач')
     created_at = models.DateTimeField('Дата створення', auto_now_add=True)
+
+    def __str__(self):
+        return f'Коментар від {self.created_by.username} в {self.created_at}'
 
     class Meta:
         verbose_name = 'Коментар'
@@ -49,7 +58,10 @@ class Category(models.Model):
 
     title = models.CharField('Назва', max_length=60, db_index=True)
     color = models.CharField('Колір', max_length=6, choices=COLOR_CHOICES)
-    description = models.TextField(max_length=500)
+    description = models.TextField('Опис', max_length=500)
+
+    def __str__(self) -> str:
+        return f'Категорія: "{self.title}"'
 
     class Meta:
         verbose_name = 'Категорія'

@@ -19,3 +19,7 @@ class User(AbstractUser):
     )
     patronymic = models.CharField('По батькові', max_length=150, blank=True)
     company = models.ForeignKey('blog.Company', models.CASCADE, null=True, blank=True, verbose_name='Компанія')
+
+    def get_full_name(self):
+        full_name = '%s %s %s' % (self.first_name, self.last_name, self.patronymic)
+        return full_name.strip()
