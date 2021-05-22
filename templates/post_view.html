@@ -3,20 +3,18 @@
 
 {% block title %}Перегляд посту №{{ object.id }}{% endblock %}
 
-{% block css %}
-  <link rel="stylesheet" href="{% static 'css/comment.css' %}">
-{% endblock %}
-
 {% block js %}
   <script type="module" src="{% static 'js/post_view.js' %}"></script>
 {% endblock %}
 
 {% block content %}
   <div class="container-fluid">
-    <div class="min-vh-100">
+    <div class="min-vh-100 d-flex flex-column">
       <h1 class="text-center mt-4">{{ object.title }}</h1>
 
       <p>{{ object.content|safe }}</p>
+
+      <div class="flex-grow-1"></div>
 
       <div class="d-flex justify-content-center mb-2">
         {% if user == object.created_by or user.is_superuser %}
