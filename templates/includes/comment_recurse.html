@@ -1,0 +1,13 @@
+<li>
+  <div class="post-comment">
+    {{ comment.content }} - {{ comment.created_by }}
+    <button type="button" class="btn btn-small btn-link reply-to-comment-btn"
+            data-comment-id="{{ comment.id }}">Відповісти</button>
+  </div>
+
+  <ul class="post-comments">
+    {% for reply in comment.children.all %}
+      {% include 'includes/comment_recurse.html' with comment=reply %}
+    {% endfor %}
+  </ul>
+</li>

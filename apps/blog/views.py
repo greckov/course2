@@ -40,14 +40,20 @@ class CategoryListView(ListView):
 
 
 class CommentCreateView(LoginRequiredMixin, View):
-    def post(self, request: HttpRequest) -> HttpResponse:
+    def post(self, request: HttpRequest, post_pk: int) -> HttpResponse:
         if not request.POST.get('content'):
             return JsonResponse({'error': '`content` field is required'})
+
+        if parent_id := request.POST.get('parent_id'):
+            parent = get_object_or_404(Comment.objects.only('id'), id=parent_id)
+        else:
+            parent = None
 
         Comment.objects.create(
             created_by=request.user,
             content=request.POST['content'],
-            post=get_object_or_404(Post.objects.only('id'), id=self.kwargs['post_pk'])
+            post=get_object_or_404(Post.objects.only('id'), id=post_pk),
+            parent=parent
         )
 
         return JsonResponse({'message': 'ok'}, status=201)

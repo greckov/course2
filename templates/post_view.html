@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-  <div class="container-fluid">
+  <div class="container-fluid" data-post-id="{{ object.id }}">
     <div class="min-vh-100 d-flex flex-column">
       <h1 class="text-center mt-4">{{ object.title }}</h1>
 
@@ -29,14 +29,19 @@
     <hr>
 
     {% if not user.is_authorized %}
-      <button type="button" class="btn btn-secondary float-end" data-bs-toggle="modal" data-bs-target="#add-comment-modal">
+      <button type="button" class="btn btn-secondary float-end" id="add-post-comment-btn">
         Додати коментар
       </button>
     {% endif %}
 
     <h4 class="mt-5">Коментарі</h4>
-    {% if object.comment_set.exists %}
-      {% include 'includes/comment_list.html' with base_comments=comments %}
+
+    {% if comments %}
+      <ul class="post-comments">
+        {% for comment in comments %}
+          {% include 'includes/comment_recurse.html' with comment=comment %}
+        {% endfor %}
+      </ul>
     {% else %}
       <p>Коментарів немає. Будьте першим</p>
     {% endif %}
@@ -52,7 +57,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form method="post">
+          <form method="post" id="comment-creation-form">
             {% csrf_token %}
 
             <div class="mb-3">
@@ -64,7 +69,7 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
-          <button type="button" class="btn btn-primary">Створити коментар</button>
+          <button type="button" class="btn btn-primary" id="perform-comment-creation-btn">Створити коментар</button>
         </div>
       </div>
     </div>
