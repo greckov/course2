@@ -24,7 +24,7 @@ class Post(models.Model):
     likes = models.IntegerField('Лайки', default=0, editable=False)
     dislikes = models.IntegerField('Дизлайки', default=0, editable=False)
     preview = models.ImageField(upload_to='post_previews')
-    categories = models.ManyToManyField('blog.Category', blank=True, verbose_name='Категорії')
+    categories = models.ManyToManyField('blog.Category', blank=True, verbose_name='Категорії', related_name='posts')
     created_at = models.DateTimeField('Дата створення', auto_now_add=True)
 
     def __str__(self) -> str:
@@ -40,13 +40,15 @@ class Comment(models.Model):
     content = models.TextField('Зміст коментару', max_length=500)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, verbose_name='Користувач')
     created_at = models.DateTimeField('Дата створення', auto_now_add=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='children',
+                               verbose_name='Коментар, до якого відповідають', null=True, blank=True)
 
     def __str__(self):
         return f'Коментар від {self.created_by.username} в {self.created_at}'
 
     class Meta:
         verbose_name = 'Коментар'
-        verbose_name_plural = 'Коменті'
+        verbose_name_plural = 'Коментарі'
 
 
 class Category(models.Model):
@@ -58,6 +60,7 @@ class Category(models.Model):
 
     title = models.CharField('Назва', max_length=60, db_index=True)
     color = models.CharField('Колір', max_length=6, choices=COLOR_CHOICES)
+    preview = models.ImageField(upload_to='category_images/')
     description = models.TextField('Опис', max_length=500)
 
     def __str__(self) -> str:

@@ -3,4 +3,26 @@
 {% block title %}Список категорій{% endblock %}
 
 {% block content %}
+  <section class="container">
+    <h1 class="text-center mt-5">Список усіх категорій на сайті</h1>
+
+    <div class="row row-cols-sm-2 row-cols-md-3 g-3 mt-3">
+      {% for category in object_list %}
+        <div class="col">
+          <div class="card shadow-sm">
+            <img class="bd-placeholder-img card-img-top" alt="" src="{{ category.preview.url }}" width="100%" height="225">
+
+            <div class="card-body">
+              <p class="card-text">{{ category.description }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <a href="{% url 'blog:index' %}?category={{ category.id }}"
+                   class="btn btn-sm btn-outline-secondary">Перегляд</a>
+                <small class="text-muted">{{ category.posts.count }} постів</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
 {% endblock %}

@@ -1,0 +1,10 @@
+<ul class="post-comments">
+  {% for comment in base_comments %}
+    <li>
+      <div class="post-comment">
+        {{ comment.content }} - {{ comment.created_by }}
+        <button type="button" class="btn btn-small btn-link">Відповісти</button>
+      </div>
+    </li>
+  {% endfor %}
+</ul>

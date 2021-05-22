@@ -1,7 +1,74 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Перегляд посту №{{ object.id }}{% endblock %}
 
-{% block content %}
+{% block css %}
+  <link rel="stylesheet" href="{% static 'css/comment.css' %}">
+{% endblock %}
 
+{% block js %}
+  <script type="module" src="{% static 'js/post_view.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+  <div class="container-fluid">
+    <div class="min-vh-100">
+      <h1 class="text-center mt-4">{{ object.title }}</h1>
+
+      <p>{{ object.content|safe }}</p>
+
+      <div class="d-flex justify-content-center mb-2">
+        {% if user == object.created_by or user.is_superuser %}
+          <a href="#" class="btn btn-warning d-block flex-grow-1 me-1">Редагувати</a>
+          <a href="#" class="btn btn-danger d-block flex-grow-1 ms-1">Видалити</a>
+        {% endif %}
+      </div>
+
+      <a href="{% url 'blog:index' %}" class="btn btn-primary d-block mb-5">Повернутися назад</a>
+    </div>
+
+    <hr>
+
+    {% if not user.is_authorized %}
+      <button type="button" class="btn btn-secondary float-end" data-bs-toggle="modal" data-bs-target="#add-comment-modal">
+        Додати коментар
+      </button>
+    {% endif %}
+
+    <h4 class="mt-5">Коментарі</h4>
+    {% if object.comment_set.exists %}
+      {% include 'includes/comment_list.html' with base_comments=comments %}
+    {% else %}
+      <p>Коментарів немає. Будьте першим</p>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block modals %}
+  <div class="modal fade" tabindex="-1" role="dialog" id="add-comment-modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Створення коментару</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="comment-content-input" class="form-label">Зміст коментару</label>
+              <textarea class="form-control" id="comment-content-input" rows="3" name="content"></textarea>
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+          <button type="button" class="btn btn-primary">Створити коментар</button>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

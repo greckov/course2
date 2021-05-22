@@ -1,0 +1,8 @@
+.post-comments {
+
+}
+
+.post-comment {
+  border: 1px solid var(--bs-gray);
+  display: inline-block;
+}
