@@ -1,4 +1,7 @@
+from django.contrib.admin.models import LogEntry, ADDITION
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.contenttypes.models import ContentType
+from django.db import transaction
 from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
@@ -49,12 +52,21 @@ class CommentCreateView(LoginRequiredMixin, View):
         else:
             parent = None
 
-        Comment.objects.create(
-            created_by=request.user,
-            content=request.POST['content'],
-            post=get_object_or_404(Post.objects.only('id'), id=post_pk),
-            parent=parent
-        )
+        with transaction.atomic():
+            comment = Comment.objects.create(
+                created_by=request.user,
+                content=request.POST['content'],
+                post=get_object_or_404(Post.objects.only('id'), id=post_pk),
+                parent=parent
+            )
+
+            LogEntry.objects.log_action(
+                user=request.user,
+                content_type=ContentType.objects.get_for_model(Comment),
+                object_id=comment.id,
+                object_repr=str(comment),
+                action_flag=ADDITION
+            )
 
         return JsonResponse({'message': 'ok'}, status=201)
 
