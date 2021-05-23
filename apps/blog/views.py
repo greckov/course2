@@ -61,8 +61,8 @@ class CommentCreateView(LoginRequiredMixin, View):
             )
 
             LogEntry.objects.log_action(
-                user=request.user,
-                content_type=ContentType.objects.get_for_model(Comment),
+                user_id=request.user.id,
+                content_type_id=ContentType.objects.get_for_model(Comment).id,
                 object_id=comment.id,
                 object_repr=str(comment),
                 action_flag=ADDITION
