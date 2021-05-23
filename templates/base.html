@@ -39,7 +39,7 @@
         {% if user.is_authenticated %}
           <a href="{% url 'admin:index' %}" class="btn btn-primary ms-lg-3 mt-lg-0 mt-2 d-block">Мій кабінет</a>
         {% else %}
-          <a href="{% url 'admin:index' %}" class="btn btn-primary ms-lg-3 mt-lg-0 mt-2 d-block">Зареєструватися</a>
+          <a href="{% url 'user_profile:registration-form' %}" class="btn btn-primary ms-lg-3 mt-lg-0 mt-2 d-block">Зареєструватися</a>
         {% endif %}
       </div>
     </div>

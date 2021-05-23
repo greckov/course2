@@ -26,7 +26,7 @@ admin.site.index_title = 'Управління кабінетом'
 admin.site.site_header = 'Кабінет користувача'
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('user/cabinet/', admin.site.urls),
     path('__debug__/', include(debug_toolbar.urls)),
     path('', include('apps.user_profile.urls')),
     path('', include('apps.blog.urls')),

@@ -57,3 +57,13 @@ class CommentCreateView(LoginRequiredMixin, View):
         )
 
         return JsonResponse({'message': 'ok'}, status=201)
+
+
+class CategoryDetailView(DetailView):
+    model = Category
+    template_name = 'category_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['posts'] = self.object.posts.all()
+        return context

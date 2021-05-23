@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'debug_toolbar',
+    'django_bootstrap5',
 
     'apps.user_profile',
     'apps.blog',

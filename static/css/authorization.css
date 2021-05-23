@@ -1,0 +1,9 @@
+.register-form-container {
+  padding-left: var(--bs-gutter-x,.75rem);
+  padding-right: var(--bs-gutter-x,.75rem);
+  max-width: 550px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,32 @@
+<table class="table mt-4">
+  <tr>
+    <th>#</th>
+    <th>Створено в</th>
+    <th>Назва</th>
+    <th>Сподобалося</th>
+    <th>Не сподобалося</th>
+    <th>Дія</th>
+  </tr>
+
+  {% for post in posts %}
+    <tr>
+      <td>{{ post.id }}</td>
+      <td>{{ post.created_at }}</td>
+      <td>{{ post.title|truncatechars:30 }}</td>
+      <td>{{ post.likes }}</td>
+      <td>{{ post.dislikes }}</td>
+      <td>
+        <a href="{% url 'blog:post_view' post.id %}" class="btn btn-primary">Перегляд</a>
+      </td>
+    </tr>
+  {% empty %}
+    <tr>
+      <td>Немає інформації</td>
+      <td>Немає інформації</td>
+      <td>Немає інформації</td>
+      <td>Немає інформації</td>
+      <td>Немає інформації</td>
+      <td>Немає інформації</td>
+    </tr>
+  {% endfor %}
+</table>

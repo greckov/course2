@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="text-center mt-5">{{ object.title }}</h1>
+
+    <p class="text-muted py-4">{{ object.description }}</p>
+
+    {% include 'includes/post_list.html' with posts=posts %}
+  </div>
+{% endblock %}
