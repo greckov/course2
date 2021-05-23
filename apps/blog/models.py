@@ -14,6 +14,7 @@ class Company(models.Model):
     class Meta:
         verbose_name = 'Компанія'
         verbose_name_plural = 'Компанії'
+        default_permissions = ()
 
 
 class Post(models.Model):
@@ -33,6 +34,7 @@ class Post(models.Model):
     class Meta:
         verbose_name = 'Пост'
         verbose_name_plural = 'Пости'
+        default_permissions = ()
 
 
 class Comment(models.Model):
@@ -49,6 +51,7 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'Коментар'
         verbose_name_plural = 'Коментарі'
+        default_permissions = ()
 
 
 class Category(models.Model):
@@ -70,3 +73,4 @@ class Category(models.Model):
         verbose_name = 'Категорія'
         verbose_name_plural = 'Категорії'
         unique_together = ('title', 'color')
+        default_permissions = ()
