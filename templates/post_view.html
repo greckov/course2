@@ -18,8 +18,8 @@
 
       <div class="d-flex justify-content-center mb-2">
         {% if user == object.created_by or user.is_superuser %}
-          <a href="#" class="btn btn-warning d-block flex-grow-1 me-1">Редагувати</a>
-          <a href="#" class="btn btn-danger d-block flex-grow-1 ms-1">Видалити</a>
+          <a href="{% url 'admin:blog_post_change' object.id %}" class="btn btn-warning d-block flex-grow-1 me-1">Редагувати</a>
+          <a href="{% url 'admin:blog_post_delete' object.id %}" class="btn btn-danger d-block flex-grow-1 ms-1">Видалити</a>
         {% endif %}
       </div>
 
