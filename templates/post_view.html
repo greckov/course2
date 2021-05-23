@@ -11,6 +11,8 @@
   <div class="container-fluid" data-post-id="{{ object.id }}">
     <h1 class="text-center mt-4">{{ object.title }}</h1>
 
+    <img src="{{ object.preview.url }}" class="img-fluid">
+
     <p class="py-4">{{ object.content|safe }}</p>
 
     <div class="d-flex justify-content-between">
