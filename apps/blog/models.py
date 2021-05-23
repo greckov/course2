@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from tinymce.models import HTMLField
 
 
 class Company(models.Model):
@@ -19,7 +20,7 @@ class Company(models.Model):
 
 class Post(models.Model):
     title = models.CharField('Назва', max_length=255, db_index=True)
-    content = models.TextField('Вміст')
+    content = HTMLField('Вміст')
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, models.SET_NULL, null=True, blank=True,
                                    verbose_name='Створено користувачем')
     likes = models.IntegerField('Лайки', default=0, editable=False)

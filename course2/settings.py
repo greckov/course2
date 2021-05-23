@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'debug_toolbar',
     'django_bootstrap5',
+    'tinymce',
 
     'apps.user_profile',
     'apps.blog',
