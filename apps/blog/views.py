@@ -14,7 +14,7 @@ from apps.blog.models import Post, Category, Comment, PostReaction
 class IndexView(ListView):
     code_name = 'index'
     template_name = 'index.html'
-    queryset = Post.objects.all_with_reactions()
+    queryset = Post.objects.all_with_reactions().order_by('-created_at')
 
     def get_queryset(self) -> QuerySet[Post]:
         queryset = super().get_queryset()
@@ -82,7 +82,7 @@ class CategoryDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['posts'] = Post.objects.all_with_reactions().filter(categories=self.object)
+        context['posts'] = Post.objects.all_with_reactions().filter(categories=self.object).order_by('-created_at')
         return context
 
 
