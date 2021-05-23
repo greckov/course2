@@ -12,6 +12,8 @@ class UserAdmin(AuthUserAdmin):
 
 @admin.register(LogEntry)
 class LogEntryAdmin(admin.ModelAdmin):
+    fields = ('action_time', 'user', 'content_type', 'action_flag', 'object_id')
+
     def get_queryset(self, request):
         if request.user.is_superuser:
             return self.model.objects.all()
