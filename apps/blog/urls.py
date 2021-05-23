@@ -11,4 +11,5 @@ urlpatterns = [
     path('category_list/', views.CategoryListView.as_view(), name='category_list'),
     path('post/<int:post_pk>/create_comment/', views.CommentCreateView.as_view(), name='create_comment'),
     path('category/<int:pk>/', views.CategoryDetailView.as_view(), name='category_detail'),
+    path('post/<int:post_pk>/set_reaction/', views.SaveUserReactionView.as_view(), name='set_user_reaction'),
 ]

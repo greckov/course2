@@ -2,19 +2,19 @@ from django.contrib.admin.models import LogEntry, ADDITION
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Count, Q
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
 from django.views.generic import ListView, DetailView
 
-from apps.blog.models import Post, Category, Comment
+from apps.blog.models import Post, Category, Comment, PostReaction
 
 
 class IndexView(ListView):
     code_name = 'index'
-    model = Post
     template_name = 'index.html'
+    queryset = Post.objects.all_with_reactions()
 
     def get_queryset(self) -> QuerySet[Post]:
         queryset = super().get_queryset()
@@ -33,6 +33,11 @@ class PostDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comments'] = self.object.comment_set.filter(parent__isnull=True)
+        context['user_reacted'] = self.object.reactions.filter(reacted_by=self.request.user).exists()
+        context.update(self.object.reactions.aggregate(
+            likes=Count('id', filter=Q(reaction_type=PostReaction.LIKE)),
+            dislikes=Count('id', filter=Q(reaction_type=PostReaction.DISLIKE)),
+        ))
         return context
 
 
@@ -77,5 +82,26 @@ class CategoryDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['posts'] = self.object.posts.all()
+        context['posts'] = Post.objects.all_with_reactions().filter(categories=self.object)
         return context
+
+
+class SaveUserReactionView(LoginRequiredMixin, View):
+    def post(self, request: HttpRequest, post_pk: int) -> HttpResponse:
+        post = get_object_or_404(Post, pk=post_pk)
+
+        if post.user_already_reacted(request.user.id):
+            return JsonResponse({'error': 'Current user is already reacted on this post'})
+
+        reaction_type = request.POST.get('reaction')
+
+        if reaction_type not in ('like', 'dislike'):
+            return JsonResponse({'error': '`reaction` field should have `like` or `dislike` value'}, status=400)
+
+        PostReaction.objects.create(
+            post=post,
+            reaction_type=getattr(PostReaction, reaction_type.upper()),
+            reacted_by=request.user
+        )
+        return JsonResponse({'message': 'ok'}, status=201)
+

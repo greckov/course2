@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db.models import QuerySet, Count, Q
 from tinymce.models import HTMLField
 
 
@@ -18,23 +19,51 @@ class Company(models.Model):
         default_permissions = ()
 
 
+class PostManager(models.Manager):
+    def all_with_reactions(self) -> QuerySet['Post']:
+        return self.annotate(
+            likes=Count('reactions', filter=Q(reactions__reaction_type=PostReaction.LIKE)),
+            dislikes=Count('reactions', filter=Q(reactions__reaction_type=PostReaction.DISLIKE))
+        )
+
+
 class Post(models.Model):
     title = models.CharField('Назва', max_length=255, db_index=True)
     content = HTMLField('Вміст')
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, models.SET_NULL, null=True, blank=True,
                                    verbose_name='Створено користувачем')
-    likes = models.IntegerField('Лайки', default=0, editable=False)
-    dislikes = models.IntegerField('Дизлайки', default=0, editable=False)
     preview = models.ImageField(upload_to='post_previews')
     categories = models.ManyToManyField('blog.Category', blank=True, verbose_name='Категорії', related_name='posts')
     created_at = models.DateTimeField('Дата створення', auto_now_add=True)
 
+    objects = PostManager()
+
     def __str__(self) -> str:
         return self.title
+
+    def user_already_reacted(self, user_id: int) -> bool:
+        return self.reactions.filter(reacted_by_id=user_id).exists()
 
     class Meta:
         verbose_name = 'Пост'
         verbose_name_plural = 'Пости'
+        default_permissions = ()
+
+
+class PostReaction(models.Model):
+    LIKE = 0
+    DISLIKE = 1
+
+    REACTION_CHOICES = (
+        (LIKE, 'Сподобалося'),
+        (DISLIKE, 'Не сподобалося'),
+    )
+
+    post = models.ForeignKey(Post, models.CASCADE, related_name='reactions')
+    reaction_type = models.PositiveSmallIntegerField(choices=REACTION_CHOICES)
+    reacted_by = models.ForeignKey(settings.AUTH_USER_MODEL, models.SET_NULL, null=True)
+
+    class Meta:
         default_permissions = ()
 
 

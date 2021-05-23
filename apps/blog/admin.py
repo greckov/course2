@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.blog.models import Post, Company, Category, Comment
+from apps.blog.models import Post, Company, Category, Comment, PostReaction
 
 
 class DefaultUserPermissionsMixin:

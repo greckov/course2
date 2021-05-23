@@ -4,7 +4,32 @@
   const postId = document.querySelector('[data-post-id]').dataset.postId;
   const modal = new bootstrap.Modal(document.getElementById('add-comment-modal'));
   const commentCreationForm = document.getElementById('comment-creation-form');
+  const likePostButton = document.getElementById('like-btn');
+  const dislikePostButton = document.getElementById('dislike-btn'); 
+  const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
   let replyCommentId = null;
+
+  // Function definitions
+  async function sendUserReaction (button, reactionType) {
+    const data = new FormData();
+    data.set('csrfmiddlewaretoken', csrfToken);
+    data.set('reaction', reactionType);
+
+    const response = await fetch(`/post/${postId}/set_reaction/`, {
+      method: 'POST',
+      body: data
+    });
+
+    if (response.status === 201) {
+      likePostButton.disabled = true;
+      dislikePostButton.disabled = true;
+
+      const countLabel = button.querySelector('.reaction-count');
+      countLabel.innerText = +countLabel.innerText + 1;
+    } else {
+      alert('Failed to set post reaction');
+    }
+  }
 
   // Setup element event listeners
   for (const button of document.getElementsByClassName('reply-to-comment-btn')) {
@@ -36,5 +61,13 @@
     } else {
       alert('Виникла помилка під час створення коментару');
     }
+  });
+
+  likePostButton.addEventListener('click', async function () {
+    await sendUserReaction(this, 'like');
+  });
+
+  dislikePostButton.addEventListener('click', async function () {
+    await sendUserReaction(this, 'dislike');
   });
 }());
