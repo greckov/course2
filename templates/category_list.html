@@ -10,7 +10,7 @@
       <div class="row row-cols-sm-2 row-cols-md-3 g-3 mt-3">
         {% for category in object_list %}
           <div class="col">
-            <div class="card shadow-sm">
+            <div class="card shadow-md" style="border: 1px solid #{{ category.color }};">
               <div class="bd-placeholder-img card-img-top category-list-image"
                    style="background-image: url('{{ category.preview.url }}')"></div>
               <div class="card-body">

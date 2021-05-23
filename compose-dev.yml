@@ -23,5 +23,3 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
     restart: on-failure
-    ports:
-      - 5432:5432
